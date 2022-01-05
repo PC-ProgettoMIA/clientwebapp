@@ -63,6 +63,14 @@ const styles = (theme) => ({
         },
     },
 
+    table: {
+        textAlign: "center"
+    },
+
+    tableHeader: {
+        padding: 20
+    },
+
     divider: {
         width: "100%",
         marginBottom: 20,
@@ -113,32 +121,37 @@ class Homepage extends Component {
     componentDidMount() {
         sessionStorage.setItem("page", "home");
 
-        Axios.get(`http://137.204.107.148:3128/api/ditto/:${this.state.thingId}`).then((res) => {
-             const data = res.data;
-             this.setState({ thingInfo: data });
-         });
- 
- 
-         Axios.get(`http://137.204.107.148:3128/api/daily/:${this.state.thingId}`).then((res) => {
-             const data = res.data;
-             this.setState({ dailyInfo: data });
-         });
- 
- 
-         Axios.get(`http://137.204.107.148:3128/api/weekly/:${this.state.thingId}`).then((res) => {
-             const data = res.data;
-             this.setState({ weeklyInfo: data });
-         });
- 
- 
-         Axios.get(`http://137.204.107.148:3128/api/monthly/:${this.state.thingId}`).then((res) => {
-             const data = res.data;
-             this.setState({ monthlyInfo: data });
-         });
+        Axios.get(`http://137.204.107.148:3128/api/ditto/${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            console.log(data)
+            this.setState({ thingInfo: data });
+        });
+
+
+        Axios.get(`http://137.204.107.148:3128/api/daily/${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ dailyInfo: data });
+        });
+
+
+        Axios.get(`http://137.204.107.148:3128/api/weekly/${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ weeklyInfo: data });
+        });
+
+
+        Axios.get(`http://137.204.107.148:3128/api/monthly/${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ monthlyInfo: data });
+        });
 
     }
 
     render() {
+        console.log(this.state)
+        if (this.state.thingInfo.features == null) {
+            console.log("NO")
+        }
         const { classes } = this.props;
         this.images = <img className={classes.img} alt="casetta progetto MIA" src="/casetta.png"></img>;
         return (
@@ -162,100 +175,117 @@ class Homepage extends Component {
                 <div className={classes.imgDiv}>
                     {this.images}
                 </div>
-                <div>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Nome del sensore</th>
-                                <th>Valore attuale</th>
-                                <th>Valore medio giornaliero</th>
-                                <th>Valore medio settimanale</th>
-                                <th>Valore medio mensile</th>
-                            </tr>
-                            <tr>
-                                <td>Temperatura - {this.state.thingInfo.features.measurements.properties.temperature.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.temperature.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.temperature.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.temperature.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.temperature.data}</td>
-                            </tr>
-                            <tr>
-                                <td>Umidita' - {this.state.thingInfo.features.measurements.properties.humidity.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.humidity.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.humidity.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.humidity.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.humidity.data}</td>
-                            </tr>
-                            <tr>
-                                <td>CO2 - {this.state.thingInfo.features.measurements.properties.co2.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.co2.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.co2.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.co2.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.co2.data}</td>
-                            </tr>
-                            <tr>
-                                <td>TVOC - {this.state.thingInfo.features.measurements.properties.tvoc.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.tvoc.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.tvoc.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.tvoc.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.tvoc.data}</td>
-                            </tr>
-                            <tr>
-                                <td>PM 1.0 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
-                            </tr>
-                            <tr>
-                                <td>PM 2.5 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
-                            </tr>
-                            <tr>
-                                <td>PM 10 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm10_std}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm10_std}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm10_std}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm10_std}</td>
-                            </tr>
-                            <tr>
-                                <td>Vento - {this.state.thingInfo.features.measurements.properties.wind.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.wind.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.wind.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.wind.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.wind.data}</td>
-                            </tr>
-                            <tr>
-                                <td>Raggi UV - {this.state.thingInfo.features.measurements.properties.uv.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.uv.data}</td>
-                                <td>{this.state.dailyInfo.features.measurements.properties.uv.data}</td>
-                                <td>{this.state.weeklyInfo.features.measurements.properties.uv.data}</td>
-                                <td>{this.state.monthlyInfo.features.measurements.properties.uv.data}</td>
-                            </tr>
-                            <tr>
-                                <td>Pioggia - {this.state.thingInfo.features.measurements.properties.rain.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.rain.data}</td>
-                                <td>/</td>
-                                <td>/</td>
-                                <td>/</td>
-                            </tr>
-                            <tr>
-                                <td>Pressione atmosferica - {this.state.thingInfo.features.measurements.properties.pressure.sensor}</td>
-                                <td>{this.state.thingInfo.features.measurements.properties.pressure.data}</td>
-                                <td>/</td>
-                                <td>/</td>
-                                <td>/</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className={classes.divChart}>
+                {this.state.thingInfo.features == null ||
+                    this.state.dailyInfo.properties == null ||
+                    this.state.weeklyInfo.properties == null ||
+                    this.state.monthlyInfo.properties == null ? null :
+                    <div>
+                        <table>
+                            <tbody>
+                                <tr className={classes.table}>
+                                    <th className={classes.tableHeader}>Nome del sensore</th>
+                                    <th className={classes.tableHeader}>Unità di misura</th>
+                                    <th className={classes.tableHeader}>Valore attuale</th>
+                                    <th className={classes.tableHeader}>Valore medio giornaliero</th>
+                                    <th className={classes.tableHeader}>Valore medio settimanale</th>
+                                    <th className={classes.tableHeader}>Valore medio mensile</th>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Temperatura - {this.state.thingInfo.features.measurements.properties.temperature.sensor}</td>
+                                    <td>°C - gradi Celsius</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.temperature.data.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Umidita' - {this.state.thingInfo.features.measurements.properties.humidity.sensor}</td>
+                                    <td>% - precentuale</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.humidity.data.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avghum.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avghum.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avghum.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Pressione atmosferica - {this.state.thingInfo.features.measurements.properties.pressure.sensor}</td>
+                                    <td>hPa - ettopascal</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.pressure.data.toString().substring(0, 6)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgpress.toString().substring(0, 6)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgpress.toString().substring(0, 6)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgpress.toString().substring(0, 6)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>CO2 - {this.state.thingInfo.features.measurements.properties.co2.sensor}</td>
+                                    <td>ppm - parti per milione</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.co2.data}</td>
+                                    <td>{this.state.dailyInfo.properties.avgco2}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgco2}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgco2}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>TVOC - {this.state.thingInfo.features.measurements.properties.tvoc.sensor}</td>
+                                    <td>ppb - parti per miliardo</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.tvoc.data.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>PM 1.0 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>μg/m^3 - microgammi al metro cubo</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[0].pm1_0_std.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>PM 2.5 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>μg/m^3 - microgammi al metro cubo</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[1].pm2_5_std.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>PM 10 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>μg/m^3 - microgammi al metro cubo</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[2].pm10_std.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Vento - {this.state.thingInfo.features.measurements.properties.wind.sensor}</td>
+                                    <td>m/s - metri al secondo</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.wind.data}</td>
+                                    <td>{this.state.dailyInfo.properties.avgwind.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avgwind.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avgwind.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Raggi UV - {this.state.thingInfo.features.measurements.properties.uv.sensor}</td>
+                                    <td>nm - nanometri</td>
+                                    <td>{this.state.thingInfo.features.measurements.properties.uv.data.toString().substring(0, 5)}</td>
+                                    <td>{this.state.dailyInfo.properties.avguv.toString().substring(0, 5)}</td>
+                                    <td>{this.state.weeklyInfo.properties.avguv.toString().substring(0, 5)}</td>
+                                    <td>{this.state.monthlyInfo.properties.avguv.toString().substring(0, 5)}</td>
+                                </tr>
+                                <tr className={classes.table}>
+                                    <td>Pioggia - {this.state.thingInfo.features.measurements.properties.rain.sensor}</td>
+                                    <td>presenza di pioggia</td>
+                                    {this.state.thingInfo.features.measurements.properties.rain.data ? <td>Sta piovendo</td> : <td>Non sta piovendo</td>}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>}
+                < div className={classes.divChart}>
                     <Button variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
                 </div>
-            </div>
+            </div >
         );
     }
 }

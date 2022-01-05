@@ -1,6 +1,7 @@
 # Client Web App
 Web app per l'uso e l'interaione con il progetto MIA dal mondo esterno.
 Permette di interagira con tutte le funzionalità del sistema del progetto MIA.
+In particolare la web app permette di interagire con le funzionalità del sistema in termini di visualizzazione di tutte le informazioni inerenti alla geo-localizzazione delle casine e alle informazioni raccolte dai sensori al loro interno. 
 #### Software Info
 
 ![GitHub](https://img.shields.io/github/license/PC-ProgettoMIA/clientwebapp)

@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
+import Axios from "axios";
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from "@material-ui/core/IconButton";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import Button from '@material-ui/core/Button';
 
 const styles = (theme) => ({
     root: {
@@ -10,6 +15,7 @@ const styles = (theme) => ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        flexGrow: 1,
     },
     contentDiv: {
         marginTop: theme.spacing(13),
@@ -65,146 +71,192 @@ const styles = (theme) => ({
     info: {
         fontWeight: "600 !important",
     },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    divChart: {
+        position: 'absolute',
+        right: 100,
+        bottom: 50
+    }
 });
 
 class Homepage extends Component {
     constructor(props) {
         super(props);
-        sessionStorage.setItem("page", "home");
+
         this.state = {
             index: 0,
+            thingId: this.props.history.location.state?.thingId,
+            thingInfo: {},
+            dailyInfo: {},
+            weeklyInfo: {},
+            monthlyInfo: {},
         };
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        this.props.history.push({
+            pathname: "/chart",
+            state: { thingId: this.state.thingId },
+        });
+    };
+
+    componentDidMount() {
+        sessionStorage.setItem("page", "home");
+
+        Axios.get(`http://137.204.107.148:3128/api/ditto/:${this.state.thingId}`).then((res) => {
+             const data = res.data;
+             this.setState({ thingInfo: data });
+         });
+ 
+ 
+         Axios.get(`http://137.204.107.148:3128/api/daily/:${this.state.thingId}`).then((res) => {
+             const data = res.data;
+             this.setState({ dailyInfo: data });
+         });
+ 
+ 
+         Axios.get(`http://137.204.107.148:3128/api/weekly/:${this.state.thingId}`).then((res) => {
+             const data = res.data;
+             this.setState({ weeklyInfo: data });
+         });
+ 
+ 
+         Axios.get(`http://137.204.107.148:3128/api/monthly/:${this.state.thingId}`).then((res) => {
+             const data = res.data;
+             this.setState({ monthlyInfo: data });
+         });
+
     }
 
     render() {
         const { classes } = this.props;
-        this.images = <img className={classes.img} alt="" src="/casetta.png"></img>;
+        this.images = <img className={classes.img} alt="casetta progetto MIA" src="/casetta.png"></img>;
         return (
             <div className={classes.root}>
-                <CssBaseline />
-                <div className={classes.contentDiv}>
-                    <Typography variant="h6" className={classes.title}>
-                        Casina di Viale della Resistenza, Cesena (FC)
-                    </Typography>
-                </div>
+                <AppBar position="static">
+                    <Toolbar variant="dense">
+                        <IconButton
+                            edge="start"
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="menu"
+                            onClick={() => this.props.history.goBack()}
+                        >
+                            <ArrowBackIosIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap>
+                            Progetto MIA - Casina di {this.state.thingId}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
                 <div className={classes.imgDiv}>
-                {this.images}
+                    {this.images}
                 </div>
                 <div>
                     <table>
-                        <tr>
-                            <th>Sensore</th>
-                            <th>Valore attuale</th>
-                            <th>Valore medio mattutino (00-12)</th>
-                            <th>Valore medio pomeridiano (12-20)</th>
-                            <th>Valore medio notturno (20-24)</th>
-                            <th>Valore medio giornaliero</th>
-                            <th>Valore medio settimanale</th>
-                        </tr>
-                        <tr>
-                            <td>Temperatura</td>
-                            <td>8.5°C</td>
-                            <td>2°C</td>
-                            <td>10°C</td>
-                            <td>5°C</td>
-                            <td>8°C</td>
-                            <td>9.3°C</td>
-                        </tr>
-                        <tr>
-                            <td>Umidità</td>
-                            <td>25%</td>
-                            <td>18%</td>
-                            <td>30%</td>
-                            <td>10%</td>
-                            <td>22%</td>
-                            <td>27%</td>
-                        </tr>
-                        <tr>
-                            <td>CO2</td>
-                            <td>513</td>
-                            <td>480</td>
-                            <td>600</td>
-                            <td>390</td>
-                            <td>520</td>
-                            <td>500</td>
-                        </tr>
-                        <tr>
-                            <td>TVOC</td>
-                            <td>112</td>
-                            <td>100</td>
-                            <td>200</td>
-                            <td>190</td>
-                            <td>175</td>
-                            <td>160</td>
-                        </tr>
-                        <tr>
-                            <td>PM 1.0</td>
-                            <td>6.0 g/m^3</td>
-                            <td>4.0 g/m^3</td>
-                            <td>8.0 g/m^3</td>
-                            <td>6.0 g/m^3</td>
-                            <td>5.5 g/m^3</td>
-                            <td>5.0 g/m^3</td>
-                        </tr>
-                        <tr>
-                            <td>PM 2.5</td>
-                            <td>9.0 g/m^3</td>
-                            <td>8.5 g/m^3</td>
-                            <td>10.0 g/m^3</td>
-                            <td>11.0 g/m^3</td>
-                            <td>10.5 g/m^3</td>
-                            <td>9.8 g/m^3</td>
-                        </tr>
-                        <tr>
-                            <td>PM 10</td>
-                            <td>11.0 g/m^3</td>
-                            <td>9.9 g/m^3</td>
-                            <td>12.0 g/m^3</td>
-                            <td>10.7 g/m^3</td>
-                            <td>10.0 g/m^3</td>
-                            <td>11.0 g/m^3</td>
-                        </tr>
-                        <tr>
-                            <td>Vento</td>
-                            <td>40 km/h</td>
-                            <td>55 km/h</td>
-                            <td>60 km/h</td>
-                            <td>49 km/h</td>
-                            <td>50 km/h</td>
-                            <td>45 km/h</td>
-                        </tr>
-                        <tr>
-                            <td>Raggi UV</td>
-                            <td>285 nm</td>
-                            <td>280 nm</td>
-                            <td>320 nm</td>
-                            <td>300 nm</td>
-                            <td>290 nm</td>
-                            <td>289 nm</td>
-                        </tr>
-                        <tr>
-                            <td>Pioggia</td>
-                            <td>false</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                        </tr>
-                        <tr>
-                            <td>Pressione Atmosferica</td>
-                            <td>1022.643</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                            <td>/</td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th>Nome del sensore</th>
+                                <th>Valore attuale</th>
+                                <th>Valore medio giornaliero</th>
+                                <th>Valore medio settimanale</th>
+                                <th>Valore medio mensile</th>
+                            </tr>
+                            <tr>
+                                <td>Temperatura - {this.state.thingInfo.features.measurements.properties.temperature.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.temperature.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.temperature.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.temperature.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.temperature.data}</td>
+                            </tr>
+                            <tr>
+                                <td>Umidita' - {this.state.thingInfo.features.measurements.properties.humidity.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.humidity.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.humidity.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.humidity.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.humidity.data}</td>
+                            </tr>
+                            <tr>
+                                <td>CO2 - {this.state.thingInfo.features.measurements.properties.co2.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.co2.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.co2.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.co2.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.co2.data}</td>
+                            </tr>
+                            <tr>
+                                <td>TVOC - {this.state.thingInfo.features.measurements.properties.tvoc.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.tvoc.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.tvoc.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.tvoc.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.tvoc.data}</td>
+                            </tr>
+                            <tr>
+                                <td>PM 1.0 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm1_0_std}</td>
+                            </tr>
+                            <tr>
+                                <td>PM 2.5 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm2_5_std}</td>
+                            </tr>
+                            <tr>
+                                <td>PM 10 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.quality.data.pm10_std}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.quality.data.pm10_std}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.quality.data.pm10_std}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.quality.data.pm10_std}</td>
+                            </tr>
+                            <tr>
+                                <td>Vento - {this.state.thingInfo.features.measurements.properties.wind.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.wind.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.wind.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.wind.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.wind.data}</td>
+                            </tr>
+                            <tr>
+                                <td>Raggi UV - {this.state.thingInfo.features.measurements.properties.uv.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.uv.data}</td>
+                                <td>{this.state.dailyInfo.features.measurements.properties.uv.data}</td>
+                                <td>{this.state.weeklyInfo.features.measurements.properties.uv.data}</td>
+                                <td>{this.state.monthlyInfo.features.measurements.properties.uv.data}</td>
+                            </tr>
+                            <tr>
+                                <td>Pioggia - {this.state.thingInfo.features.measurements.properties.rain.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.rain.data}</td>
+                                <td>/</td>
+                                <td>/</td>
+                                <td>/</td>
+                            </tr>
+                            <tr>
+                                <td>Pressione atmosferica - {this.state.thingInfo.features.measurements.properties.pressure.sensor}</td>
+                                <td>{this.state.thingInfo.features.measurements.properties.pressure.data}</td>
+                                <td>/</td>
+                                <td>/</td>
+                                <td>/</td>
+                            </tr>
+                        </tbody>
                     </table>
-
+                </div>
+                <div className={classes.divChart}>
+                    <Button variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
                 </div>
             </div>
         );
     }
 }
-export default withStyles(styles)((Homepage));
+export default withStyles(styles)(withRouter(Homepage));

@@ -4,7 +4,7 @@ import {
     AreaChart, Area, XAxis, YAxis,
     CartesianGrid, Tooltip
 } from 'recharts';
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,6 +29,10 @@ import { ReactComponent as PM10 } from "./svgIcon/factory.svg";
 import { ReactComponent as Uv } from "./svgIcon/rays.svg";
 import { ReactComponent as Wind } from "./svgIcon/wind.svg";
 import { ReactComponent as AtmosphericPressure } from "./svgIcon/atmospheric.svg";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Axios from "axios";
 
 const drawerWidth = 240;
 
@@ -52,38 +56,24 @@ const styles = (theme) => ({
         }),
     },
     menuButton: {
-        marginRight: 36,
+        marginRight: theme.spacing(2),
+        "@media(min-width: 993px)": {
+            margin: theme.spacing(1),
+        },
     },
     hide: {
         display: 'none',
     },
     drawer: {
         width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerClose: {
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        width: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9) + 1,
-        },
     },
     toolbar: {
         display: 'flex',
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        marginTop: "5px",
+        marginBottom: "5px",
         alignItems: 'center',
-        justifyContent: 'flex-end',
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
@@ -92,118 +82,321 @@ const styles = (theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    chart:{
+    chart: {
         marginTop: 75,
     },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    drawerHeader: {
+        display: "flex",
+        alignItems: "center",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+        justifyContent: "flex-end",
+    },
 });
-
-
-const rangeData = [
-    {
-        "day": "05-01",
-        "temperature": [
-            -1,
-            10
-        ]
-    },
-    {
-        "day": "05-02",
-        "temperature": [
-            2,
-            15
-        ]
-    },
-    {
-        "day": "05-03",
-        "temperature": [
-            3,
-            12
-        ]
-    },
-    {
-        "day": "05-04",
-        "temperature": [
-            4,
-            12
-        ]
-    },
-    {
-        "day": "05-05",
-        "temperature": [
-            12,
-            16
-        ]
-    },
-    {
-        "day": "05-06",
-        "temperature": [
-            5,
-            16
-        ]
-    },
-    {
-        "day": "05-07",
-        "temperature": [
-            3,
-            12
-        ]
-    },
-    {
-        "day": "05-08",
-        "temperature": [
-            0,
-            8
-        ]
-    },
-    {
-        "day": "05-09",
-        "temperature": [
-            -3,
-            5
-        ]
-    }
-];
 
 class Charts extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
-            property: "Temperatura"
+            property: "Temperatura",
+            thingId: this.props.history.location.state?.thingId,
+
+            rangeData: [
+                {
+                    "day": "05-01",
+                    "temperature": [
+                        -1,
+                        10
+                    ]
+                },
+                {
+                    "day": "05-02",
+                    "temperature": [
+                        2,
+                        15
+                    ]
+                },
+                {
+                    "day": "05-03",
+                    "temperature": [
+                        3,
+                        12
+                    ]
+                },
+                {
+                    "day": "05-04",
+                    "temperature": [
+                        4,
+                        12
+                    ]
+                },
+                {
+                    "day": "05-05",
+                    "temperature": [
+                        12,
+                        16
+                    ]
+                },
+                {
+                    "day": "05-06",
+                    "temperature": [
+                        5,
+                        16
+                    ]
+                },
+                {
+                    "day": "05-07",
+                    "temperature": [
+                        3,
+                        12
+                    ]
+                },
+                {
+                    "day": "05-08",
+                    "temperature": [
+                        0,
+                        8
+                    ]
+                },
+                {
+                    "day": "05-09",
+                    "temperature": [
+                        -3,
+                        5
+                    ]
+                }
+            ],
+            temperatureData: [],
+            humidityData: [],
+            pressureData: [],
+            co2Data: [],
+            tvocData: [],
+            pm1Data: [],
+            pm25Data: [],
+            pm10Data: [],
+            windData: [],
+            rainData: [],
+            uvData: [],
+
         };
+        this.items = [
+            {
+                name: "Temperatura",
+                function: console.log("temp"),
+                icon: <Thermometer width={30} height={30} />,
+            },
+            {
+                name: "Umidita'",
+                function: console.log("hum"),
+                icon: <CloudQueueIcon />,
+            },
+            {
+                name: "Velocità del vento",
+                function: console.log("wind"),
+                icon: <Wind width={30} height={30} />,
+            },
+            {
+                name: "Co2",
+                function: console.log("co2"),
+                icon: <Co2SecondIcon width={30} height={30} />,
+            },
+            {
+                name: "TVOC",
+                function: console.log("tvoc"),
+                icon: <InvertColorsIcon />,
+            },
+            {
+                name: "Raggi ultravioletti",
+                function: console.log("uv"),
+                icon: <Uv width={30} height={30} />,
+            },
+            {
+                name: "Pm 1",
+                function: console.log("pm1"),
+                icon: <PM1 width={30} height={30} />,
+            },
+            {
+                name: "Pm 2.5",
+                function: console.log("pm25"),
+                icon: <PM25 width={30} height={30} />,
+            },
+            {
+                name: "Pm 10",
+                function: console.log("pm10"),
+                icon: <PM10 width={30} height={30} />,
+            },
+            {
+                name: "Pressione atmosferica",
+                function: console.log("press"),
+                icon: <AtmosphericPressure width={30} height={30} />,
+            },
+        ];
+        this.handleDrawerClose = this.handleDrawerClose.bind(this);
+        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     }
-    handleDrawerOpen = () => {
-        this.setState.open = true;
+
+    componentDidMount() {
+        sessionStorage.setItem("page", "home");
+    }
+
+    handleDrawerOpen() {
+        this.setState({ open: true });
     };
 
-    handleDrawerClose = () => {
-        this.setState.open = false;
+    handleDrawerClose() {
+        this.setState({ open: false });
     };
 
+    handleClickAway = () => {
+        if (this.state.open) {
+            this.handleDrawerClose();
+        }
+    };
+
+    handleGraph = () => {
+        console.log("prova");
+    };
+
+    handleTemperature = () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/temperature/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ temperatureData: data });
+        });
+
+        this.handleGraph();
+    }
+
+    handleHumidity = () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/humidity/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ humidityData: data });
+        });
+
+        this.handleGraph();
+    }
+
+    handlePressure = ()=> {
+        
+        Axios.get(`http://137.204.107.148:3128/api/history/pressure/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ pressureData: data });
+        });
+
+        this.handleGraph();
+    }
+
+    handleCo2= () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/co2/:${this.state.thingId}`).then((res) => {
+             const data = res.data;
+             this.setState({ co2Data: data });
+         });
+        this.handleGraph();
+    }
+
+    handleTvoc = () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/tvoc/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ tvocData: data });
+        });
+        this.handleGraph();
+    }
+
+
+    handlePm2_5 = () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ pm25Data: data });
+        });
+        this.handleGraph();
+    }
+
+
+    
+    handlePm1_0 = () => {
+        Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ pm1Data: data });
+        });
+        this.handleGraph();
+    }
+
+    handlePm10 = () => {     
+        Axios.get(`http://137.204.107.148:3128/api/history/pm10/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ pm10Data: data });
+        });
+
+        this.handleGraph();
+    }
+
+
+    handleWind = () => {     
+        Axios.get(`http://137.204.107.148:3128/api/history/wind/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ windData: data });
+        });
+
+
+        this.handleGraph();
+    }
+    
+    
+    handleRain() {    
+        Axios.get(`http://137.204.107.148:3128/api/history/rain/:${this.state.thingId}`,).then((res) => {
+            const data = res.data;
+            this.setState({ rainData: data });
+        });
+
+        this.handleGraph();
+    }
+    
+    handleUv() {    
+        Axios.get(`http://137.204.107.148:3128/api/history/uv/:${this.state.thingId}`).then((res) => {
+            const data = res.data;
+            this.setState({ uvData: data });
+        });
+
+        this.handleGraph();
+    }
+
+    
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <h1> prova </h1>
                 <CssBaseline />
                 <AppBar
                     position="fixed"
-                    className={clsx(classes.appBar, {
-                        [classes.appBarShift]: this.state.open,
-                    })}
                 >
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar}>
+
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
                             onClick={this.handleDrawerOpen}
                             edge="start"
-                            className={clsx(classes.menuButton, {
-                                [classes.hide]: this.state.open,
-                            })}
+                            className={clsx(classes.menuButton, this.state.open && classes.hide)}
                         >
                             <MenuIcon />
                         </IconButton>
+                        <IconButton
+                            edge="start"
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="menu"
+                            onClick={() => this.props.history.push("/")}
+                        >
+                            <ArrowBackIosIcon />
+                        </IconButton>
+
                         <Typography variant="h6" noWrap>
                             Progetto MIA - Grafici
                         </Typography>
@@ -211,50 +404,50 @@ class Charts extends Component {
                 </AppBar>
 
                 <Drawer
-                    variant="permanent"
-                    className={clsx(classes.drawer, {
-                        [classes.drawerOpen]: this.state.open.open,
-                        [classes.drawerClose]: !this.state.open,
-                    })}
+                    className={classes.drawer}
+                    variant="persistent"
+                    anchor="left"
+                    open={this.state.open}
                     classes={{
-                        paper: clsx({
-                            [classes.drawerOpen]: this.state.open,
-                            [classes.drawerClose]: !this.state.open,
-                        }),
+                        paper: classes.drawerPaper,
                     }}
                 >
-                    <div className={classes.toolbar}>
+                    <div className={classes.drawetHeader}>
                         <IconButton onClick={this.handleDrawerClose}>
-
+                            <ChevronLeftIcon />
                         </IconButton>
                     </div>
                     <Divider />
                     <List>
-                        {['Temperatura', 'Umidità', 'Velocità del vento', 'Co2', 'TVOC', 'Raggi ultravioletti', 'Pm 1', 'Pm 2.5', 'Pm 10', 'Pressione atmosferica'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon>{index == 0 ? <Thermometer width={30} height={30}/> : index == 1 ? <CloudQueueIcon/> : index == 2 ? <Wind width={30} height={30}/> : index==3  ? <Co2SecondIcon width={30} height={30}/> :  index==4  ? <InvertColorsIcon/> : index == 5 ? <Uv width={30} height={30}/> : index==6  ? <PM1 width={30} height={30}/> : index==7 ? <PM25 width={30} height={30}/> : index==8 ? <PM10 width={30} height={30}/>: <AtmosphericPressure width={30} height={30}/>}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
+                        {this.items == null ? null : this.items.map((item) => {
+                            return (
+                                <ListItem button key={item.name} onClick={item.function}>
+                                    <ListItemIcon >{item.icon}</ListItemIcon>
+                                    <ListItemText primary={item.name} />
+                                </ListItem>
+                            );
+                        })}
+
                     </List>
                 </Drawer>
                 <main className={classes.content}>
+
                     <div className={classes.toolbar} />
                     <div className={classes.chart}>
                         <h4>Grafico della {this.state.property} contente le medie dell'ultima settimana</h4>
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={rangeData}
-                        margin={{
-                            top: 30, right: 20, bottom: 20, left: 20,
-                        }}
-                    >
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Area dataKey="temperature" stroke="#8884d8" fill="#8884d8" />
-                        <Tooltip />
-                    </AreaChart>
+                        <AreaChart
+                            width={730}
+                            height={250}
+                            data={this.state.rangeData}
+                            margin={{
+                                top: 30, right: 20, bottom: 20, left: 20,
+                            }}
+                        >
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Area dataKey="temperature" stroke="#8884d8" fill="#8884d8" />
+                            <Tooltip />
+                        </AreaChart>
                     </div>
                 </main>
             </div>

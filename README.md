@@ -21,15 +21,16 @@ Permette di interagira con tutte le funzionalità del sistema del progetto MIA.
 ![GitHub last commit](https://img.shields.io/github/last-commit/PC-ProgettoMIA/clientwebapp/develop)
 
 
-##Requirements
+## Requirements
 
 
 Per avviare la web app e interagire con le casine del progetto MIA,  seguire i seguenti passaggi:
 ```bash
+#Posizionarsi all'interno della cartella clientwebapp
 #Installazione di tutte le dipendenze
-npm install
+npm install <NOMEDIPENDENZA>
 #Avvio dell'web app
-npm run start
+npm start
 ```
 
 

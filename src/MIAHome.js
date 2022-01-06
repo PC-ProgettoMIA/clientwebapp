@@ -64,7 +64,8 @@ const styles = (theme) => ({
     },
 
     table: {
-        textAlign: "center"
+        textAlign: "center",
+        marginBottom: "100px"
     },
 
     tableHeader: {
@@ -90,10 +91,11 @@ const styles = (theme) => ({
         marginRight: theme.spacing(2),
     },
     divChart: {
-        position: 'absolute',
-        right: 100,
-        bottom: 50
-    }
+        position: 'relative',
+        left: (window.innerWidth/2)-10,
+        paddingTop: "30px",
+    },
+
 });
 
 class Homepage extends Component {
@@ -284,7 +286,7 @@ class Homepage extends Component {
                         </table>
                     </div>}
                 < div className={classes.divChart}>
-                    <Button variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
+                    <Button className={classes.chartBtn} variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
                 </div>
             </div >
         );

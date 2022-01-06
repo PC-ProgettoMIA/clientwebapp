@@ -63,10 +63,10 @@ const MarkersExample = (things) => {
         [things]
     );
 
-    function handleClick(name) {
+    function handleClick(name, schoolname) {
         history.push({
             pathname: "/home",
-            state: { thingId: name }
+            state: { thingId: name, school: schoolname}
         });
     };
 
@@ -121,7 +121,7 @@ const MarkersExample = (things) => {
                                     click: (e) => {
                                         things.things.map((elem, i) => {
                                             if (elem.position.latitude.toFixed(1) === e.position[1].toFixed(1) && elem.position.longitude.toFixed(1) === e.position[0].toFixed(1)) {
-                                                handleClick(elem.thingId);
+                                                handleClick(elem.thingId, elem.school);
                                             }
                                         })
                                     }

@@ -106,74 +106,8 @@ class Charts extends Component {
         super(props);
         this.state = {
             open: false,
-            property: "Temperatura",
+            property: "",
             thingId: this.props.history.location.state?.thingId,
-
-            rangeData: [
-                {
-                    "day": "05-01",
-                    "temperature": [
-                        -1,
-                        10
-                    ]
-                },
-                {
-                    "day": "05-02",
-                    "temperature": [
-                        2,
-                        15
-                    ]
-                },
-                {
-                    "day": "05-03",
-                    "temperature": [
-                        3,
-                        12
-                    ]
-                },
-                {
-                    "day": "05-04",
-                    "temperature": [
-                        4,
-                        12
-                    ]
-                },
-                {
-                    "day": "05-05",
-                    "temperature": [
-                        12,
-                        16
-                    ]
-                },
-                {
-                    "day": "05-06",
-                    "temperature": [
-                        5,
-                        16
-                    ]
-                },
-                {
-                    "day": "05-07",
-                    "temperature": [
-                        3,
-                        12
-                    ]
-                },
-                {
-                    "day": "05-08",
-                    "temperature": [
-                        0,
-                        8
-                    ]
-                },
-                {
-                    "day": "05-09",
-                    "temperature": [
-                        -3,
-                        5
-                    ]
-                }
-            ],
             temperatureData: [],
             humidityData: [],
             pressureData: [],
@@ -185,57 +119,58 @@ class Charts extends Component {
             windData: [],
             rainData: [],
             uvData: [],
+            graph: <div></div>,
 
         };
         this.items = [
             {
                 name: "Temperatura",
-                function: console.log("temp"),
+                function: this.handleTemperature,
                 icon: <Thermometer width={30} height={30} />,
             },
             {
                 name: "Umidita'",
-                function: console.log("hum"),
+                function: this.handleHumidity,
                 icon: <CloudQueueIcon />,
             },
             {
                 name: "Velocità del vento",
-                function: console.log("wind"),
+                function: this.handleWind,
                 icon: <Wind width={30} height={30} />,
             },
             {
                 name: "Co2",
-                function: console.log("co2"),
+                function: this.handleCo2,
                 icon: <Co2SecondIcon width={30} height={30} />,
             },
             {
                 name: "TVOC",
-                function: console.log("tvoc"),
+                function: this.handleTvoc,
                 icon: <InvertColorsIcon />,
             },
             {
                 name: "Raggi ultravioletti",
-                function: console.log("uv"),
+                function: this.handleUv,
                 icon: <Uv width={30} height={30} />,
             },
             {
                 name: "Pm 1",
-                function: console.log("pm1"),
+                function: this.handlePm1_0,
                 icon: <PM1 width={30} height={30} />,
             },
             {
                 name: "Pm 2.5",
-                function: console.log("pm25"),
+                function: this.handlePm2_5,
                 icon: <PM25 width={30} height={30} />,
             },
             {
                 name: "Pm 10",
-                function: console.log("pm10"),
+                function: this.handlePm10,
                 icon: <PM10 width={30} height={30} />,
             },
             {
                 name: "Pressione atmosferica",
-                function: console.log("press"),
+                function: this.handlePressure,
                 icon: <AtmosphericPressure width={30} height={30} />,
             },
         ];
@@ -261,113 +196,152 @@ class Charts extends Component {
         }
     };
 
-    handleGraph = () => {
-        console.log("prova");
+    handleGraph = (sensorData) => {
+        if (sensorData === null || sensorData === [] || sensorData === {}) {
+            this.setState({ graph: <div><h4>Non sono presenti dati per il sensore di {this.state.property}</h4></div> })
+        } else {
+            this.setState({
+                graph:
+                    <div>
+                        <h4> Grafico della {this.state.property} contente le medie dell'ultima settimana</h4>
+                        < AreaChart
+                            width={730}
+                            height={250}
+                            data={sensorData}
+                            margin={{
+                                top: 30, right: 20, bottom: 20, left: 20,
+                            }}
+                        >
+                            <XAxis dataKey="timestamp" />
+                            <YAxis />
+                            <Area dataKey="data" stroke="#8884d8" fill="#8884d8" />
+                            <Tooltip />
+                        </AreaChart >
+                    </div >
+            })
+        }
     };
 
-    handleTemperature = () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/temperature/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handleTemperature = (e) => {
+        e.preventDefault();
+        this.setState({ property: "temperatura" });
+        Axios.get(`http://137.204.107.148:3128/api/history/temperature/${this.state.thingId}`).then((res) => {
+            const data = res.data.temperature;
             this.setState({ temperatureData: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.temperatureData);
     }
 
-    handleHumidity = () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/humidity/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handleHumidity = (e) => {
+        e.preventDefault();
+        this.setState({ property: "umidità" });
+        Axios.get(`http://137.204.107.148:3128/api/history/humidity/${this.state.thingId}`).then((res) => {
+            const data = res.data.humidity;
             this.setState({ humidityData: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.humidityData);
     }
 
-    handlePressure = ()=> {
-        
-        Axios.get(`http://137.204.107.148:3128/api/history/pressure/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handlePressure = (e) => {
+        e.preventDefault();
+        this.setState({ property: "pressione atmosferica" });
+        Axios.get(`http://137.204.107.148:3128/api/history/pressure/${this.state.thingId}`).then((res) => {
+            const data = res.data.pressure;
             this.setState({ pressureData: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.pressureData);
     }
 
-    handleCo2= () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/co2/:${this.state.thingId}`).then((res) => {
-             const data = res.data;
-             this.setState({ co2Data: data });
-         });
-        this.handleGraph();
+    handleCo2 = (e) => {
+        e.preventDefault();
+        this.setState({ property: "co2" });
+        Axios.get(`http://137.204.107.148:3128/api/history/co2/${this.state.thingId}`).then((res) => {
+            const data = res.data.co2
+            this.setState({ co2Data: data });
+        });
+        this.handleGraph(this.state.co2Data);
     }
 
-    handleTvoc = () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/tvoc/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handleTvoc = (e) => {
+        e.preventDefault();
+        this.setState({ property: "tvoc" });
+        Axios.get(`http://137.204.107.148:3128/api/history/tvoc/${this.state.thingId}`).then((res) => {
+            const data = res.data.tvoc;
             this.setState({ tvocData: data });
         });
-        this.handleGraph();
+        this.handleGraph(this.state.tvocData);
     }
 
 
-    handlePm2_5 = () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handlePm2_5 = (e) => {
+        e.preventDefault();
+        this.setState({ property: "pm 2.5" });
+        Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/${this.state.thingId}`).then((res) => {
+            const data = res.data.pm2_5;
             this.setState({ pm25Data: data });
         });
-        this.handleGraph();
+        this.handleGraph(this.state.pm25Data);
     }
 
-
-    
-    handlePm1_0 = () => {
-        Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handlePm1_0 = (e) => {
+        e.preventDefault();
+        this.setState({ property: "pm 1.0" });
+        Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/${this.state.thingId}`).then((res) => {
+            const data = res.data.pm1_0;
             this.setState({ pm1Data: data });
         });
-        this.handleGraph();
+        this.handleGraph(this.state.pm1Data);
     }
 
-    handlePm10 = () => {     
-        Axios.get(`http://137.204.107.148:3128/api/history/pm10/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handlePm10 = (e) => {
+        e.preventDefault();
+        this.setState({ property: "pm 10" });
+        Axios.get(`http://137.204.107.148:3128/api/history/pm10/${this.state.thingId}`).then((res) => {
+            const data = res.data.pm10;
             this.setState({ pm10Data: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.pm10Data);
     }
 
 
-    handleWind = () => {     
-        Axios.get(`http://137.204.107.148:3128/api/history/wind/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+    handleWind = (e) => {
+        e.preventDefault();
+        this.setState({ property: "vento" });
+        Axios.get(`http://137.204.107.148:3128/api/history/wind/${this.state.thingId}`).then((res) => {
+            const data = res.data.wind;
             this.setState({ windData: data });
         });
-
-
-        this.handleGraph();
+        this.handleGraph(this.state.windData);
     }
-    
-    
-    handleRain() {    
-        Axios.get(`http://137.204.107.148:3128/api/history/rain/:${this.state.thingId}`,).then((res) => {
-            const data = res.data;
+
+
+    handleRain = (e) => {
+        e.preventDefault();
+        this.setState({ property: "pioggia" });
+        Axios.get(`http://137.204.107.148:3128/api/history/rain/${this.state.thingId}`,).then((res) => {
+            const data = res.data.rain;
             this.setState({ rainData: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.rainData);
     }
-    
-    handleUv() {    
-        Axios.get(`http://137.204.107.148:3128/api/history/uv/:${this.state.thingId}`).then((res) => {
-            const data = res.data;
+
+    handleUv = (e) => {
+        e.preventDefault();
+        this.setState({ property: "raggi ultravioletti" });
+        Axios.get(`http://137.204.107.148:3128/api/history/uv/${this.state.thingId}`).then((res) => {
+            const data = res.data.handleUv;
             this.setState({ uvData: data });
         });
 
-        this.handleGraph();
+        this.handleGraph(this.state.uvData);
     }
 
-    
+
     render() {
         const { classes } = this.props;
         return (
@@ -434,20 +408,7 @@ class Charts extends Component {
 
                     <div className={classes.toolbar} />
                     <div className={classes.chart}>
-                        <h4>Grafico della {this.state.property} contente le medie dell'ultima settimana</h4>
-                        <AreaChart
-                            width={730}
-                            height={250}
-                            data={this.state.rangeData}
-                            margin={{
-                                top: 30, right: 20, bottom: 20, left: 20,
-                            }}
-                        >
-                            <XAxis dataKey="day" />
-                            <YAxis />
-                            <Area dataKey="temperature" stroke="#8884d8" fill="#8884d8" />
-                            <Tooltip />
-                        </AreaChart>
+                        {this.state.graph}
                     </div>
                 </main>
             </div>

@@ -103,6 +103,7 @@ class Homepage extends Component {
         this.state = {
             index: 0,
             thingId: this.props.history.location.state?.thingId,
+            school: this.props.history.location.state?.school,
             thingInfo: {},
             dailyInfo: {},
             weeklyInfo: {},
@@ -168,7 +169,7 @@ class Homepage extends Component {
                             <ArrowBackIosIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap>
-                            Progetto MIA - Casina di {this.state.thingId}
+                            Progetto MIA - Casina di {this.state.school}
                         </Typography>
                     </Toolbar>
                 </AppBar>

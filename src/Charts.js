@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import {
-    AreaChart, Area, XAxis, YAxis,
-    CartesianGrid, Tooltip
+    AreaChart, Area, XAxis, YAxis, Tooltip,
 } from 'recharts';
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -31,7 +29,6 @@ import { ReactComponent as Wind } from "./svgIcon/wind.svg";
 import { ReactComponent as AtmosphericPressure } from "./svgIcon/atmospheric.svg";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Axios from "axios";
 
 const drawerWidth = 240;
@@ -214,7 +211,7 @@ class Charts extends Component {
                         >
                             <XAxis dataKey="timestamp" />
                             <YAxis />
-                            <Area dataKey="data" stroke="#8884d8" fill="#8884d8" />
+                            <Area type="monotone" dataKey="data" stroke="#8884d8" fill="#8884d8" />
                             <Tooltip />
                         </AreaChart >
                     </div >

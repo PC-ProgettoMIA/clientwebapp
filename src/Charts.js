@@ -30,6 +30,7 @@ import { ReactComponent as AtmosphericPressure } from "./svgIcon/atmospheric.svg
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Axios from "axios";
+import { timestampToDate } from './timestampToDate';
 
 const drawerWidth = 240;
 
@@ -194,6 +195,7 @@ class Charts extends Component {
     };
 
     handleGraph = (sensorData) => {
+        console.log(sensorData)
         if (sensorData === null || sensorData === [] || sensorData === {}) {
             this.setState({ graph: <div><h4>Non sono presenti dati per il sensore di {this.state.property}</h4></div> })
         } else {
@@ -209,7 +211,7 @@ class Charts extends Component {
                                 top: 30, right: 20, bottom: 20, left: 20,
                             }}
                         >
-                            <XAxis dataKey="timestamp" />
+                            <XAxis dataKey="date" />
                             <YAxis />
                             <Area type="monotone" dataKey="data" stroke="#8884d8" fill="#8884d8" />
                             <Tooltip />
@@ -224,10 +226,12 @@ class Charts extends Component {
         this.setState({ property: "temperatura" });
         Axios.get(`http://137.204.107.148:3128/api/history/temperature/${this.state.thingId}`).then((res) => {
             const data = res.data.temperature;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ temperatureData: data });
+            this.handleGraph(this.state.temperatureData);
         });
 
-        this.handleGraph(this.state.temperatureData);
+
     }
 
     handleHumidity = (e) => {
@@ -235,10 +239,12 @@ class Charts extends Component {
         this.setState({ property: "umidità" });
         Axios.get(`http://137.204.107.148:3128/api/history/humidity/${this.state.thingId}`).then((res) => {
             const data = res.data.humidity;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ humidityData: data });
+            this.handleGraph(this.state.humidityData);
+
         });
 
-        this.handleGraph(this.state.humidityData);
     }
 
     handlePressure = (e) => {
@@ -246,10 +252,12 @@ class Charts extends Component {
         this.setState({ property: "pressione atmosferica" });
         Axios.get(`http://137.204.107.148:3128/api/history/pressure/${this.state.thingId}`).then((res) => {
             const data = res.data.pressure;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ pressureData: data });
+            this.handleGraph(this.state.pressureData);
+
         });
 
-        this.handleGraph(this.state.pressureData);
     }
 
     handleCo2 = (e) => {
@@ -257,9 +265,11 @@ class Charts extends Component {
         this.setState({ property: "co2" });
         Axios.get(`http://137.204.107.148:3128/api/history/co2/${this.state.thingId}`).then((res) => {
             const data = res.data.co2
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ co2Data: data });
+            this.handleGraph(this.state.co2Data);
+
         });
-        this.handleGraph(this.state.co2Data);
     }
 
     handleTvoc = (e) => {
@@ -267,9 +277,11 @@ class Charts extends Component {
         this.setState({ property: "tvoc" });
         Axios.get(`http://137.204.107.148:3128/api/history/tvoc/${this.state.thingId}`).then((res) => {
             const data = res.data.tvoc;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ tvocData: data });
+            this.handleGraph(this.state.tvocData);
+
         });
-        this.handleGraph(this.state.tvocData);
     }
 
 
@@ -278,9 +290,11 @@ class Charts extends Component {
         this.setState({ property: "pm 2.5" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/${this.state.thingId}`).then((res) => {
             const data = res.data.pm2_5;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ pm25Data: data });
+            this.handleGraph(this.state.pm25Data);
+
         });
-        this.handleGraph(this.state.pm25Data);
     }
 
     handlePm1_0 = (e) => {
@@ -288,9 +302,11 @@ class Charts extends Component {
         this.setState({ property: "pm 1.0" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/${this.state.thingId}`).then((res) => {
             const data = res.data.pm1_0;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ pm1Data: data });
+            this.handleGraph(this.state.pm1Data);
+
         });
-        this.handleGraph(this.state.pm1Data);
     }
 
     handlePm10 = (e) => {
@@ -298,10 +314,12 @@ class Charts extends Component {
         this.setState({ property: "pm 10" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm10/${this.state.thingId}`).then((res) => {
             const data = res.data.pm10;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ pm10Data: data });
+            this.handleGraph(this.state.pm10Data);
+
         });
 
-        this.handleGraph(this.state.pm10Data);
     }
 
 
@@ -310,9 +328,11 @@ class Charts extends Component {
         this.setState({ property: "vento" });
         Axios.get(`http://137.204.107.148:3128/api/history/wind/${this.state.thingId}`).then((res) => {
             const data = res.data.wind;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ windData: data });
+            this.handleGraph(this.state.windData);
+
         });
-        this.handleGraph(this.state.windData);
     }
 
 
@@ -321,21 +341,25 @@ class Charts extends Component {
         this.setState({ property: "pioggia" });
         Axios.get(`http://137.204.107.148:3128/api/history/rain/${this.state.thingId}`,).then((res) => {
             const data = res.data.rain;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ rainData: data });
+            this.handleGraph(this.state.rainData);
+
         });
 
-        this.handleGraph(this.state.rainData);
     }
 
     handleUv = (e) => {
         e.preventDefault();
         this.setState({ property: "raggi ultravioletti" });
         Axios.get(`http://137.204.107.148:3128/api/history/uv/${this.state.thingId}`).then((res) => {
-            const data = res.data.handleUv;
+            const data = res.data.uv;
+            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
             this.setState({ uvData: data });
+            this.handleGraph(this.state.uvData);
+
         });
 
-        this.handleGraph(this.state.uvData);
     }
 
 

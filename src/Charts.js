@@ -152,7 +152,7 @@ class Charts extends Component {
                 icon: <Uv width={30} height={30} />,
             },
             {
-                name: "Pm 1",
+                name: "Pm 1.0",
                 function: this.handlePm1_0,
                 icon: <PM1 width={30} height={30} />,
             },

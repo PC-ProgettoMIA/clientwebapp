@@ -23,6 +23,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import { ContactsOutlined } from "@material-ui/icons";
+import { Container } from "@material-ui/core";
 
 const renderPoint = (data) => {
     return (
@@ -66,7 +67,7 @@ const MarkersExample = (things) => {
     function handleClick(name, schoolname) {
         history.push({
             pathname: "/home",
-            state: { thingId: name, school: schoolname}
+            state: { thingId: name, school: schoolname }
         });
     };
 
@@ -74,15 +75,7 @@ const MarkersExample = (things) => {
 
     return (
         <>
-            <div style={{ flexGrow: 1 }}>
-                <AppBar position="static">
-                    <Toolbar variant="dense">
-                        <Typography variant="h6" color="inherit">
-                            Progetto MIA - Mappa
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-            </div>
+
             <AzureMapsProvider>
                 <div style={{ height: window.innerHeight }}>
                     <AzureMap options={option}>
@@ -272,7 +265,25 @@ class Maps extends Component {
     render() {
         return (
             <div className="App">
-                <MarkersExample things={this.state == null ? [] : this.state.things == null ? [] : this.state.things} />
+                <div style={{ flexGrow: 1 }}>
+                    <AppBar position="static">
+                        <Toolbar variant="dense">
+                            <Typography variant="h6" color="inherit">
+                                Progetto MIA - Mappa
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                </div>
+                <div className="mia">
+                    <div className="mia-text">Il progetto MIA è un progetto finanziato dalla regione che coinvolge diversi
+                        enti.
+                        L'obiettivo specifico del progetto è quello di sostenere i ragazzi di scuole di diverso ordine e grado ed i relativi docenti ad un lavoro di gruppo interdisciplinare orientato all'utilizzo ed all'auto-costruzione di misuratori di inquinamento replicabili,
+                        in modo da organizzare future misurazioni della qualità dell'aria sul nostro territorio.</div></div>
+                <Container className="map-container">
+                    <h3>Cerca la tua casina!</h3>
+                    <MarkersExample className="map" things={this.state == null ? [] : this.state.things == null ? [] : this.state.things} />
+
+                </Container>
 
             </div>
         );

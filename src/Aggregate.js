@@ -105,55 +105,17 @@ class Homepage extends Component {
 
         this.state = {
             index: 0,
-            thingId: this.props.history.location.state?.thingId,
-            school: this.props.history.location.state?.school,
             area_properties: this.props.history.location.state?.area_properties,
-
-            thingInfo: {},
-            dailyInfo: {},
-            weeklyInfo: {},
-            monthlyInfo: {},
         };
-        this.handleClick = this.handleClick.bind(this);
     }
-
-    handleClick() {
-        this.props.history.push({
-            pathname: "/chart",
-            state: { thingId: this.state.thingId },
-        });
-    };
 
     componentDidMount() {
         console.log(this.state)
         sessionStorage.setItem("page", "home");
-
-        Axios.get(`http://137.204.107.148:3128/api/ditto/${this.state.thingId}`).then((res) => {
-            const data = res.data;
-            this.setState({ thingInfo: data });
-        });
-
-
-        Axios.get(`http://137.204.107.148:3128/api/daily/${this.state.thingId}`).then((res) => {
-            const data = res.data;
-            this.setState({ dailyInfo: data });
-        });
-
-
-        Axios.get(`http://137.204.107.148:3128/api/weekly/${this.state.thingId}`).then((res) => {
-            const data = res.data;
-            this.setState({ weeklyInfo: data });
-        });
-
-
-        Axios.get(`http://137.204.107.148:3128/api/monthly/${this.state.thingId}`).then((res) => {
-            const data = res.data;
-            this.setState({ monthlyInfo: data });
-        });
-
     }
 
     render() {
+        console.log(this.state.area_properties);
         const { classes } = this.props;
         this.images = <img className={classes.img} alt="casetta progetto MIA" src="/casetta.png"></img>;
         return (
@@ -170,17 +132,14 @@ class Homepage extends Component {
                             <ArrowBackIosIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap>
-                            Progetto MIA - Casina di {this.state.school}
+                            Progetto MIA - Dati Aggregati
                         </Typography>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.imgDiv}>
                     {this.images}
                 </div>
-                {this.state.thingInfo.features == null ||
-                    this.state.dailyInfo.properties == null ||
-                    this.state.weeklyInfo.properties == null ||
-                    this.state.monthlyInfo.properties == null ? null :
+                {this.state.area_properties == null ? null :
                     <div>
                         <table>
                             <tbody>
@@ -192,122 +151,58 @@ class Homepage extends Component {
 
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>Temperatura - {this.state.thingInfo.features.measurements.properties.temperature.sensor}</td>
+                                    <td>Temperatura - Si7021</td>
                                     <td>°C - gradi Celsius</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.temperature.data.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgtemp.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.temperature.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgtemp.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>Umidita' - {this.state.thingInfo.features.measurements.properties.humidity.sensor}</td>
+                                    <td>Umidita' - Si7021</td>
                                     <td>% - precentuale</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.humidity.data.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avghum.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avghum.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avghum.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.humidity.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avghum.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>Pressione atmosferica - {this.state.thingInfo.features.measurements.properties.pressure.sensor}</td>
+                                    <td>Pressione atmosferica - BMP280</td>
                                     <td>hPa - ettopascal</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.pressure.data.toString().substring(0, 6)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgpress.toString().substring(0, 6)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgpress.toString().substring(0, 6)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgpress.toString().substring(0, 6)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.pressure.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgpress.toString().substring(0, 6)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>CO2 - {this.state.thingInfo.features.measurements.properties.co2.sensor}</td>
+                                    <td>CO2 - SGP30</td>
                                     <td>ppm - parti per milione</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.co2.data}</td>
-                                    <td>{this.state.dailyInfo.properties.avgco2}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgco2}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgco2}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.co2.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgco2}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>TVOC - {this.state.thingInfo.features.measurements.properties.tvoc.sensor}</td>
+                                    <td>TVOC - SGP30</td>
                                     <td>ppb - parti per miliardo</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.tvoc.data.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgtvoc.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.tvoc.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgtvoc.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>PM 1.0 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>PM 1.0 - PMS5003 </td>
                                     <td>μg/m^3 - microgammi al metro cubo</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[0].pm1_0_std.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgpm1_0.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.quality.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgpm1_0.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>PM 2.5 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>PM 2.5 - PMS5003 </td>
                                     <td>μg/m^3 - microgammi al metro cubo</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[1].pm2_5_std.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgpm2_5.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.quality.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgpm2_5.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>PM 10 - {this.state.thingInfo.features.measurements.properties.quality.sensor}</td>
+                                    <td>PM 10 - PMS5003 </td>
                                     <td>μg/m^3 - microgammi al metro cubo</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.quality.data[2].pm10_std.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgpm10.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.quality.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgpm10.toString().substring(0, 5)}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>Vento - {this.state.thingInfo.features.measurements.properties.wind.sensor}</td>
+                                    <td>Vento - Anemometro </td>
                                     <td>m/s - metri al secondo</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.wind.data}</td>
-                                    <td>{this.state.dailyInfo.properties.avgwind.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avgwind.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avgwind.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.wind.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avgwind}</td>
                                 </tr>
                                 <tr className={classes.table}>
-                                    <td>Raggi UV - {this.state.thingInfo.features.measurements.properties.uv.sensor}</td>
+                                    <td>Raggi UV - Sensore raggi UV</td>
                                     <td>nm - nanometri</td>
-                                    <td>{this.state.thingInfo.features.measurements.properties.uv.data.toString().substring(0, 5)}</td>
-                                    <td>{this.state.dailyInfo.properties.avguv.toString().substring(0, 5)}</td>
-                                    <td>{this.state.weeklyInfo.properties.avguv.toString().substring(0, 5)}</td>
-                                    <td>{this.state.monthlyInfo.properties.avguv.toString().substring(0, 5)}</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.uv.timestamp)}</td>
-
+                                    <td>{this.state.area_properties.avguv.toString().substring(0, 5)}</td>
                                 </tr>
-                                <tr className={classes.table}>
-                                    <td>Pioggia - {this.state.thingInfo.features.measurements.properties.rain.sensor}</td>
-                                    <td>presenza di pioggia</td>
-                                    {this.state.thingInfo.features.measurements.properties.rain.data ? <td>Sta piovendo</td> : <td>Non sta piovendo</td>}
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>{timestampToDateTime(this.state.thingInfo.features.measurements.properties.rain.timestamp)}</td>
-
-                                </tr>
-
                             </tbody>
                         </table>
                     </div>}
-                < div className={classes.divChart}>
-                    <Button className={classes.chartBtn} variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
-                </div>
             </div >
         );
     }

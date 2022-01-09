@@ -24,6 +24,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import { ContactsOutlined } from "@material-ui/icons";
 import { Box, Button, Container, Input, TextField } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
 
 const renderPoint = (data) => {
     return (
@@ -258,7 +259,9 @@ class Maps extends Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            visible: false,
+        }
 
         this.handleClick = this.handleClick.bind(this);
 
@@ -266,23 +269,28 @@ class Maps extends Component {
 
     handleClick(e) {
         e.preventDefault()
-        //TODO add control for number and latitude in -90, 90 e longitude in -180, 180
-        Axios.get(`http://137.204.107.148:3128/api/spatial`, {
-            params: {
-                latitude1: this.state.lat1,
-                latitude2: this.state.lat2,
-                longitude1: this.state.lon1,
-                longitude2: this.state.lon2,
+        if (this.state.lat1 > 90 || this.state.lat1 < -90 || this.state.lat2 > 90 || this.state.lat2 < -90 || this.state.lon1 > 180 || this.state.lon1 < -180 || this.state.lon2 > 180 || this.state.lon2 < -180) {
+         this.setState({visible: true});
+        } else {
+            //TODO add control for number and latitude in -90, 90 e longitude in -180, 180
+            Axios.get(`http://137.204.107.148:3128/api/spatial`, {
+                params: {
+                    latitude1: this.state.lat1,
+                    longitude1: this.state.lon1,
+                    latitude2: this.state.lat2,
+                    longitude2: this.state.lon2,
 
-            }
-        }).then((res) => {
-            const data = res.data;
-            this.props.history.push({
-                pathname: "/aggregate",
-                state: { area_properties: data.area_properties }
+                }
+            }).then((res) => {
+                const data = res.data;
+                console.log(data);
+                this.props.history.push({
+                    pathname: "/aggregate",
+                    state: { area_properties: data.area_properties }
+                });
+
             });
-
-        });
+        }
     }
 
     componentDidMount() {
@@ -320,6 +328,7 @@ class Maps extends Component {
                         <TextField className="gps" label="Longitudine 2" variant="outlined" onChange={(e) => this.setState({ lon2: e.target.value })}></TextField>
                         <Button variant="contained" onClick={this.handleClick}>Cerca!</Button>
                     </div>
+                    {this.state.visible ?  <Alert severity='error'>Attezione dati errati!! La latitudine deve essere compresa tra 90 e -90 mentre la longitudine tra 180 e -180.</Alert> : <></>}
                     <p>Altrimenti cliccando su una casina nella mappa sotto potrai vedere i suoi dati!</p>
 
                     <MarkersExample className="map" things={this.state == null ? [] : this.state.things == null ? [] : this.state.things} />

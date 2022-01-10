@@ -31,6 +31,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Axios from "axios";
 import { timestampToDate } from './timestampToDate';
+import { Box, Button, Grid } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -97,6 +98,21 @@ const styles = (theme) => ({
         ...theme.mixins.toolbar,
         justifyContent: "flex-end",
     },
+    text: {
+        width: "100%",
+        marginLeft: "20%",
+        marginRight: "20%"
+    },
+
+    graphs: {
+        display: "flex",
+        flexDirection: "row",
+
+    },
+    space: {
+        marginRight: "10%"
+    }
+
 });
 
 class Charts extends Component {
@@ -123,51 +139,61 @@ class Charts extends Component {
         this.items = [
             {
                 name: "Temperatura",
+                api: "temperature",
                 function: this.handleTemperature,
                 icon: <Thermometer width={30} height={30} />,
             },
             {
                 name: "Umidita'",
+                api: "humidity",
                 function: this.handleHumidity,
                 icon: <CloudQueueIcon />,
             },
             {
                 name: "Velocità del vento",
+                api: "wind",
                 function: this.handleWind,
                 icon: <Wind width={30} height={30} />,
             },
             {
                 name: "Co2",
+                api: "co2",
                 function: this.handleCo2,
                 icon: <Co2SecondIcon width={30} height={30} />,
             },
             {
                 name: "TVOC",
+                api: "tvoc",
                 function: this.handleTvoc,
                 icon: <InvertColorsIcon />,
             },
             {
                 name: "Raggi ultravioletti",
+                api: "uv",
                 function: this.handleUv,
                 icon: <Uv width={30} height={30} />,
             },
             {
                 name: "Pm  1.0",
+                api: "qual",
                 function: this.handlePm1_0,
                 icon: <PM1 width={30} height={30} />,
             },
             {
                 name: "Pm 2.5",
+                api: "qual",
                 function: this.handlePm2_5,
                 icon: <PM25 width={30} height={30} />,
             },
             {
                 name: "Pm 10",
+                api: "qual",
                 function: this.handlePm10,
                 icon: <PM10 width={30} height={30} />,
             },
             {
                 name: "Pressione atmosferica",
+                api: "pressure",
                 function: this.handlePressure,
                 icon: <AtmosphericPressure width={30} height={30} />,
             },
@@ -425,14 +451,35 @@ class Charts extends Component {
 
                     </List>
                 </Drawer>
+
                 <main className={classes.content}>
 
                     <div className={classes.toolbar} />
-                    <div className={classes.chart}>
-                        {this.state.graph}
+                    <div className={classes.text}>
+                        <p>Visualizza i grafici della casina! Cliccando sui bottoni a lato potrai vedere l'andamento settimanale delle proprietà.</p>
                     </div>
+
+                    <div className={classes.graphs}>
+                        <div display="flex" flexDirection="column">
+                            {this.items == null ? null : this.items.map((item) => {
+                                return (
+                                    <div key={item.name}>
+                                        <Button startIcon={item.icon} onClick={item.function}>{item.name}</Button>
+                                    </div>
+
+                                )
+
+                            })}
+                        </div>
+                        <div className={classes.space}></div>
+                        <div className={classes.chart}>
+                            {this.state.graph}
+                        </div>
+                    </div>
+
+
                 </main>
-            </div>
+            </div >
         );
     }
 }

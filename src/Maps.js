@@ -261,6 +261,7 @@ class Maps extends Component {
         super(props);
         this.state = {
             visible: false,
+            notPresent: false,
         }
 
         this.handleClick = this.handleClick.bind(this);
@@ -269,9 +270,14 @@ class Maps extends Component {
 
     handleClick(e) {
         e.preventDefault()
-        if (this.state.lat1 > 90 || this.state.lat1 < -90 || this.state.lat2 > 90 || this.state.lat2 < -90 || this.state.lon1 > 180 || this.state.lon1 < -180 || this.state.lon2 > 180 || this.state.lon2 < -180) {
-         this.setState({visible: true});
+        if (isNaN(this.state.lat1) || isNaN(this.state.lat2) || isNaN(this.state.lon1) || isNaN(this.state.lon2)) {
+            this.setState({ visible: true });
+        }
+        else if (this.state.lat1 > 90 || this.state.lat1 < -90 || this.state.lat2 > 90 || this.state.lat2 < -90 || this.state.lon1 > 180 || this.state.lon1 < -180 || this.state.lon2 > 180 || this.state.lon2 < -180) {
+            this.setState({ visible: true });
         } else {
+            this.setState({ visible: false });
+
             //TODO add control for number and latitude in -90, 90 e longitude in -180, 180
             Axios.get(`http://137.204.107.148:3128/api/spatial`, {
                 params: {
@@ -283,11 +289,18 @@ class Maps extends Component {
                 }
             }).then((res) => {
                 const data = res.data;
-                console.log(data);
-                this.props.history.push({
-                    pathname: "/aggregate",
-                    state: { area_properties: data.area_properties }
-                });
+                if (JSON.stringify(data) === JSON.stringify({})) {
+                    this.setState({ notPresent: true });
+                }
+                else {
+                    this.setState({ notPresent: false });
+
+                    this.props.history.push({
+                        pathname: "/aggregate",
+                        state: { area_properties: data.area_properties, schools: data.schools }
+                    });
+                }
+
 
             });
         }
@@ -328,7 +341,9 @@ class Maps extends Component {
                         <TextField className="gps" label="Longitudine 2" variant="outlined" onChange={(e) => this.setState({ lon2: e.target.value })}></TextField>
                         <Button variant="contained" onClick={this.handleClick}>Cerca!</Button>
                     </div>
-                    {this.state.visible ?  <Alert severity='error'>Attezione dati errati!! La latitudine deve essere compresa tra 90 e -90 mentre la longitudine tra 180 e -180.</Alert> : <></>}
+                    {this.state.visible ? <Alert severity='error'>Attezione dati errati!! La latitudine deve essere compresa tra 90 e -90 mentre la longitudine tra 180 e -180.</Alert> : <></>}
+                    {this.state.notPresent ? <Alert severity='error'>Nessuna casina presente in quel territorio!</Alert> : <></>}
+
                     <p>Altrimenti cliccando su una casina nella mappa sotto potrai vedere i suoi dati!</p>
 
                     <MarkersExample className="map" things={this.state == null ? [] : this.state.things == null ? [] : this.state.things} />

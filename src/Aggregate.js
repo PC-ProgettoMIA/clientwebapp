@@ -106,6 +106,7 @@ class Homepage extends Component {
         this.state = {
             index: 0,
             area_properties: this.props.history.location.state?.area_properties,
+            schools: this.props.history.location.state?.schools,
         };
     }
 
@@ -115,7 +116,7 @@ class Homepage extends Component {
     }
 
     render() {
-        console.log(this.state.area_properties);
+        console.log(this.state);
         const { classes } = this.props;
         this.images = <img className={classes.img} alt="casetta progetto MIA" src="/casetta.png"></img>;
         return (

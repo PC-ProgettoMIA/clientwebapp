@@ -91,11 +91,15 @@ const styles = (theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
+
     divChart: {
-        position: 'relative',
-        left: (window.innerWidth / 2) - 10,
-        paddingTop: "30px",
+        marginTop: "10px",
+        width: "100%"
     },
+
+    chartBtn: {
+        marginLeft: "87%"
+    }
 
 });
 
@@ -304,10 +308,11 @@ class Homepage extends Component {
 
                             </tbody>
                         </table>
+                        < div className={classes.divChart}>
+                            <Button className={classes.chartBtn} variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
+                        </div>
                     </div>}
-                < div className={classes.divChart}>
-                    <Button className={classes.chartBtn} variant="contained" color="primary" onClick={this.handleClick}>Visualizza Grafici</Button>
-                </div>
+
             </div >
         );
     }

@@ -272,11 +272,14 @@ class Maps extends Component {
         e.preventDefault()
         if (isNaN(this.state.lat1) || isNaN(this.state.lat2) || isNaN(this.state.lon1) || isNaN(this.state.lon2)) {
             this.setState({ visible: true });
+            this.setState({ notPresent: false });
         }
         else if (this.state.lat1 > 90 || this.state.lat1 < -90 || this.state.lat2 > 90 || this.state.lat2 < -90 || this.state.lon1 > 180 || this.state.lon1 < -180 || this.state.lon2 > 180 || this.state.lon2 < -180) {
             this.setState({ visible: true });
+            this.setState({ notPresent: false });
         } else {
             this.setState({ visible: false });
+            this.setState({ notPresent: false });
 
             //TODO add control for number and latitude in -90, 90 e longitude in -180, 180
             Axios.get(`http://137.204.107.148:3128/api/spatial`, {
@@ -289,7 +292,8 @@ class Maps extends Component {
                 }
             }).then((res) => {
                 const data = res.data;
-                if (JSON.stringify(data) === JSON.stringify({})) {
+
+                if (data.schools.length == 0) {
                     this.setState({ notPresent: true });
                 }
                 else {

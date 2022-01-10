@@ -30,7 +30,7 @@ import { ReactComponent as AtmosphericPressure } from "./svgIcon/atmospheric.svg
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Axios from "axios";
-import { timestampToDate } from './timestampToDate';
+import { timestampToDate, timestampToDateTime } from './timestampToDate';
 import { Box, Button, Grid } from '@material-ui/core';
 
 const drawerWidth = 240;
@@ -221,7 +221,6 @@ class Charts extends Component {
     };
 
     handleGraph = (sensorData) => {
-        console.log(sensorData)
         if (sensorData === null || sensorData === [] || sensorData === {}) {
             this.setState({ graph: <div><h4>Non sono presenti dati per il sensore di {this.state.property}</h4></div> })
         } else {
@@ -460,7 +459,7 @@ class Charts extends Component {
                     </div>
 
                     <div className={classes.graphs}>
-                        <div display="flex" flexDirection="column">
+                        <div>
                             {this.items == null ? null : this.items.map((item) => {
                                 return (
                                     <div key={item.name}>

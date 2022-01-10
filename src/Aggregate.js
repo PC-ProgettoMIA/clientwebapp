@@ -97,6 +97,10 @@ const styles = (theme) => ({
         paddingTop: "30px",
     },
 
+    tableContainer: {
+        marginBottom: "3%"
+    }
+
 });
 
 class Homepage extends Component {
@@ -140,8 +144,15 @@ class Homepage extends Component {
                 <div className={classes.imgDiv}>
                     {this.images}
                 </div>
+                <div>
+                    <p>Le casine presenti in quest'area geografica appartegono a:</p>
+                    <ul>
+                        {this.state.schools.map((s) => <li key={this.state.schools.indexOf(s)}>{s.name}</li>)}
+                    </ul>
+
+                </div>
                 {this.state.area_properties == null ? null :
-                    <div>
+                    <div className={classes.tableContainer}>
                         <table>
                             <tbody>
                                 <tr className={classes.table}>

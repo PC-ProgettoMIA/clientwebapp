@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
-import { Box, Button, Container, TextField } from "@material-ui/core";
+import { Button, Container, TextField } from "@material-ui/core";
 import Alert from '@material-ui/lab/Alert';
 
 const renderPoint = (data) => {
@@ -110,7 +110,7 @@ const MarkersExample = (things) => {
                                         }
                                     },
                                     click: (e) => {
-                                        things.things.map((elem, i) => {
+                                        things.things.forEach((elem, i) => {
                                             if (elem.position.latitude.toFixed(1) === e.position[1].toFixed(1) && elem.position.longitude.toFixed(1) === e.position[0].toFixed(1)) {
                                                 handleClick(elem.thingId, elem.school);
                                             }
@@ -177,7 +177,7 @@ class Maps extends Component {
             }).then((res) => {
                 const data = res.data;
 
-                if (data.schools.length == 0) {
+                if (data.schools.length === 0) {
                     this.setState({ notPresent: true });
                 }
                 else {

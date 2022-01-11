@@ -251,7 +251,7 @@ class Charts extends Component {
         this.setState({ property: "temperatura" });
         Axios.get(`http://137.204.107.148:3128/api/history/temperature/${this.state.thingId}`).then((res) => {
             const data = res.data.temperature;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ temperatureData: data });
             this.handleGraph(this.state.temperatureData);
         });
@@ -264,7 +264,7 @@ class Charts extends Component {
         this.setState({ property: "umidità" });
         Axios.get(`http://137.204.107.148:3128/api/history/humidity/${this.state.thingId}`).then((res) => {
             const data = res.data.humidity;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ humidityData: data });
             this.handleGraph(this.state.humidityData);
 
@@ -277,7 +277,7 @@ class Charts extends Component {
         this.setState({ property: "pressione atmosferica" });
         Axios.get(`http://137.204.107.148:3128/api/history/pressure/${this.state.thingId}`).then((res) => {
             const data = res.data.pressure;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pressureData: data });
             this.handleGraph(this.state.pressureData);
 
@@ -290,7 +290,7 @@ class Charts extends Component {
         this.setState({ property: "co2" });
         Axios.get(`http://137.204.107.148:3128/api/history/co2/${this.state.thingId}`).then((res) => {
             const data = res.data.co2
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ co2Data: data });
             this.handleGraph(this.state.co2Data);
 
@@ -302,7 +302,7 @@ class Charts extends Component {
         this.setState({ property: "tvoc" });
         Axios.get(`http://137.204.107.148:3128/api/history/tvoc/${this.state.thingId}`).then((res) => {
             const data = res.data.tvoc;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ tvocData: data });
             this.handleGraph(this.state.tvocData);
 
@@ -315,7 +315,7 @@ class Charts extends Component {
         this.setState({ property: "pm 2.5" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/${this.state.thingId}`).then((res) => {
             const data = res.data.pm2_5;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm25Data: data });
             this.handleGraph(this.state.pm25Data);
 
@@ -327,7 +327,7 @@ class Charts extends Component {
         this.setState({ property: "pm 1.0" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/${this.state.thingId}`).then((res) => {
             const data = res.data.pm1_0;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm1Data: data });
             this.handleGraph(this.state.pm1Data);
 
@@ -339,7 +339,7 @@ class Charts extends Component {
         this.setState({ property: "pm 10" });
         Axios.get(`http://137.204.107.148:3128/api/history/pm10/${this.state.thingId}`).then((res) => {
             const data = res.data.pm10;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm10Data: data });
             this.handleGraph(this.state.pm10Data);
 
@@ -353,7 +353,7 @@ class Charts extends Component {
         this.setState({ property: "vento" });
         Axios.get(`http://137.204.107.148:3128/api/history/wind/${this.state.thingId}`).then((res) => {
             const data = res.data.wind;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ windData: data });
             this.handleGraph(this.state.windData);
 
@@ -366,7 +366,7 @@ class Charts extends Component {
         this.setState({ property: "pioggia" });
         Axios.get(`http://137.204.107.148:3128/api/history/rain/${this.state.thingId}`,).then((res) => {
             const data = res.data.rain;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ rainData: data });
             this.handleGraph(this.state.rainData);
 
@@ -379,7 +379,7 @@ class Charts extends Component {
         this.setState({ property: "raggi ultravioletti" });
         Axios.get(`http://137.204.107.148:3128/api/history/uv/${this.state.thingId}`).then((res) => {
             const data = res.data.uv;
-            data.forEach((elem) => elem.date = timestampToDate(new Number(elem.timestamp)))
+            data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ uvData: data });
             this.handleGraph(this.state.uvData);
 

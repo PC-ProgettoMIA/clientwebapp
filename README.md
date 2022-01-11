@@ -24,16 +24,15 @@ In particolare la web app permette di interagire con le funzionalità del sistem
 
 ## Requirements
 
-
 Per avviare la web app e interagire con le casine del progetto MIA,  seguire i seguenti passaggi:
-```bash
-#Posizionarsi all'interno della cartella clientwebapp
-#Installazione di tutte le dipendenze
-npm install <NOMEDIPENDENZA>
-#Avvio dell'web app
-npm start
-```
 
+```bash
+#Abilitare i permessi per l'esecuzione degli script.
+chmod 755 web_app.sh
+
+#Esecuzione per l'avvio del servizio web.
+./web_app.sh
+```
 
 # License
 See the [License File](./LICENSE).

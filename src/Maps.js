@@ -12,8 +12,6 @@ import {
 import {
     AuthenticationType,
     data,
-    MapMouseEvent,
-    PopupOptions
 } from "azure-maps-control";
 import { key } from "./key";
 import { withRouter } from "react-router-dom"
@@ -22,8 +20,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
-import { ContactsOutlined } from "@material-ui/icons";
-import { Box, Button, Container, Input, TextField } from "@material-ui/core";
+import { Box, Button, Container, TextField } from "@material-ui/core";
 import Alert from '@material-ui/lab/Alert';
 
 const renderPoint = (data) => {
@@ -141,117 +138,6 @@ const MarkersExample = (things) => {
             </AzureMapsProvider>
         </>
     );
-
-
-
-
-    /*
-    let history = useHistory();
-
-    const [popupOptions, setPopupOptions] = useState({});
-    const [popupProperties, setPopupProperties] = useState({});
-    const positionData = []; //contains all informations about mia home
-    const option = useMemo(() => {
-        return {
-            authOptions: {
-                authType: AuthenticationType.subscriptionKey,
-                subscriptionKey: key
-            },
-            center: [12, 42],
-            zoom: 5,
-            view: "Auto"
-        };
-    }, []);
-
-    const memoizedMarkerRender = useMemo(
-        () => mapData.map((el) => renderPoint(el)),
-        [mapData]
-    );
-
-
-
-
-    function handleClick(name) {
-        history.push({
-            pathname: "/home",
-            state: { thingId: name }
-        });
-    };
-    return (
-        <>
-            <div style={{ flexGrow: 1 }}>
-                <AppBar position="static">
-                    <Toolbar variant="dense">
-                        <Typography variant="h6" color="inherit">
-                            Progetto MIA - Mappa
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-            </div>
-            <AzureMapsProvider>
-                <div style={{ height: window.innerHeight }}>
-                    <AzureMap options={option}>
-                        <AzureMapDataSourceProvider
-                            id={"MultiplePoint AzureMapDataSourceProvider"}
-                        >
-                            <AzureMapLayerProvider
-                                id={"MultiplePoint AzureMapLayerProvider"}
-                                options={{
-                                    iconOptions: {
-                                        image: "pin-red"
-                                    }
-                                }}
-                                events={{
-                                    mousemove: (e) => {
-                                        if (e.shapes && e.shapes.length > 0) {
-                                            const prop = e.shapes[0];
-
-                                            // Set popup options
-                                            setPopupOptions({
-                                                ...popupOptions,
-                                                position: new data.Position(
-                                                    prop.data.geometry.coordinates[0],
-                                                    prop.data.geometry.coordinates[1]
-                                                ),
-                                                pixelOffset: [0, -18]
-                                            });
-
-                                            if (prop.data.properties)
-                                                // Set popup properties from Feature Properties that are declared on create Feature
-                                                setPopupProperties({
-                                                    ...prop.data.properties.popUpProp
-                                                });
-                                        }
-                                    },
-                                    click: (e) => {
-                                        mapData.map((elem, i) => {
-                                            if (elem.position.latitude.toFixed(1) === e.position[1].toFixed(1) && elem.position.longitude.toFixed(1) === e.position[0].toFixed(1)) {
-                                                handleClick(elem.thingId);
-                                            }
-                                        })
-                                    }
-
-                                }}
-                                type="SymbolLayer"
-                            />
-                            {memoizedMarkerRender}
-                        </AzureMapDataSourceProvider>
-                        <AzureMapPopup
-                            isVisible={true}
-                            options={popupOptions}
-                            popupContent={
-                                <div style={{ padding: "8px 16px" }}>
-                                    <h3>{popupProperties.thingId}</h3>
-                                    <p>{popupProperties.school}</p>
-                                </div> // Inject your JSX
-                            }
-                        />
-                    </AzureMap>
-                </div>
-            </AzureMapsProvider>
-        </>
-    );
-    */
 };
 
 
@@ -280,8 +166,6 @@ class Maps extends Component {
         } else {
             this.setState({ visible: false });
             this.setState({ notPresent: false });
-
-            //TODO add control for number and latitude in -90, 90 e longitude in -180, 180
             Axios.get(`http://137.204.107.148:3128/api/spatial`, {
                 params: {
                     latitude1: this.state.lat1,

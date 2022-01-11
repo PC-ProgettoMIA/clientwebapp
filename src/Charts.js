@@ -30,8 +30,8 @@ import { ReactComponent as AtmosphericPressure } from "./svgIcon/atmospheric.svg
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Axios from "axios";
-import { timestampToDate, timestampToDateTime } from './timestampToDate';
-import { Box, Button, Grid } from '@material-ui/core';
+import { timestampToDate } from './timestampToDate';
+import { Button } from '@material-ui/core';
 
 const drawerWidth = 240;
 

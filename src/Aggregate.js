@@ -2,13 +2,10 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
-import Axios from "axios";
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import Button from '@material-ui/core/Button';
-import { timestampToDateTime } from "./timestampToDate";
 
 const styles = (theme) => ({
     root: {

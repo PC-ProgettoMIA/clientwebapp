@@ -166,7 +166,7 @@ class Maps extends Component {
         } else {
             this.setState({ visible: false });
             this.setState({ notPresent: false });
-            Axios.get(`http://137.204.107.148:3128/api/spatial`, {
+            Axios.get(`https://137.204.107.148:3128/api/spatial`, {
                 params: {
                     latitude1: this.state.lat1,
                     longitude1: this.state.lon1,
@@ -195,7 +195,7 @@ class Maps extends Component {
     }
 
     componentDidMount() {
-        Axios.get(`http://137.204.107.148:3128/api/all/things`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/all/things`).then((res) => {
             const data = res.data;
             this.setState({ things: data.items });
 

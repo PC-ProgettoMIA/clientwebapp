@@ -129,25 +129,25 @@ class Homepage extends Component {
     componentDidMount() {
         sessionStorage.setItem("page", "home");
 
-        Axios.get(`http://137.204.107.148:3128/api/ditto/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/ditto/${this.state.thingId}`).then((res) => {
             const data = res.data;
             this.setState({ thingInfo: data });
         });
 
 
-        Axios.get(`http://137.204.107.148:3128/api/daily/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/daily/${this.state.thingId}`).then((res) => {
             const data = res.data;
             this.setState({ dailyInfo: data });
         });
 
 
-        Axios.get(`http://137.204.107.148:3128/api/weekly/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/weekly/${this.state.thingId}`).then((res) => {
             const data = res.data;
             this.setState({ weeklyInfo: data });
         });
 
 
-        Axios.get(`http://137.204.107.148:3128/api/monthly/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/monthly/${this.state.thingId}`).then((res) => {
             const data = res.data;
             this.setState({ monthlyInfo: data });
         });

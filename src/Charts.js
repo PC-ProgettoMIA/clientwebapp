@@ -249,7 +249,7 @@ class Charts extends Component {
     handleTemperature = (e) => {
         e.preventDefault();
         this.setState({ property: "temperatura" });
-        Axios.get(`http://137.204.107.148:3128/api/history/temperature/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/temperature/${this.state.thingId}`).then((res) => {
             const data = res.data.temperature;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ temperatureData: data });
@@ -262,7 +262,7 @@ class Charts extends Component {
     handleHumidity = (e) => {
         e.preventDefault();
         this.setState({ property: "umidità" });
-        Axios.get(`http://137.204.107.148:3128/api/history/humidity/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/humidity/${this.state.thingId}`).then((res) => {
             const data = res.data.humidity;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ humidityData: data });
@@ -275,7 +275,7 @@ class Charts extends Component {
     handlePressure = (e) => {
         e.preventDefault();
         this.setState({ property: "pressione atmosferica" });
-        Axios.get(`http://137.204.107.148:3128/api/history/pressure/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/pressure/${this.state.thingId}`).then((res) => {
             const data = res.data.pressure;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pressureData: data });
@@ -288,7 +288,7 @@ class Charts extends Component {
     handleCo2 = (e) => {
         e.preventDefault();
         this.setState({ property: "co2" });
-        Axios.get(`http://137.204.107.148:3128/api/history/co2/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/co2/${this.state.thingId}`).then((res) => {
             const data = res.data.co2
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ co2Data: data });
@@ -300,7 +300,7 @@ class Charts extends Component {
     handleTvoc = (e) => {
         e.preventDefault();
         this.setState({ property: "tvoc" });
-        Axios.get(`http://137.204.107.148:3128/api/history/tvoc/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/tvoc/${this.state.thingId}`).then((res) => {
             const data = res.data.tvoc;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ tvocData: data });
@@ -313,7 +313,7 @@ class Charts extends Component {
     handlePm2_5 = (e) => {
         e.preventDefault();
         this.setState({ property: "pm 2.5" });
-        Axios.get(`http://137.204.107.148:3128/api/history/pm2_5/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/pm2_5/${this.state.thingId}`).then((res) => {
             const data = res.data.pm2_5;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm25Data: data });
@@ -325,7 +325,7 @@ class Charts extends Component {
     handlePm1_0 = (e) => {
         e.preventDefault();
         this.setState({ property: "pm 1.0" });
-        Axios.get(`http://137.204.107.148:3128/api/history/pm1_0/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/pm1_0/${this.state.thingId}`).then((res) => {
             const data = res.data.pm1_0;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm1Data: data });
@@ -337,7 +337,7 @@ class Charts extends Component {
     handlePm10 = (e) => {
         e.preventDefault();
         this.setState({ property: "pm 10" });
-        Axios.get(`http://137.204.107.148:3128/api/history/pm10/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/pm10/${this.state.thingId}`).then((res) => {
             const data = res.data.pm10;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ pm10Data: data });
@@ -351,7 +351,7 @@ class Charts extends Component {
     handleWind = (e) => {
         e.preventDefault();
         this.setState({ property: "vento" });
-        Axios.get(`http://137.204.107.148:3128/api/history/wind/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/wind/${this.state.thingId}`).then((res) => {
             const data = res.data.wind;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ windData: data });
@@ -364,7 +364,7 @@ class Charts extends Component {
     handleRain = (e) => {
         e.preventDefault();
         this.setState({ property: "pioggia" });
-        Axios.get(`http://137.204.107.148:3128/api/history/rain/${this.state.thingId}`,).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/rain/${this.state.thingId}`,).then((res) => {
             const data = res.data.rain;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ rainData: data });
@@ -377,7 +377,7 @@ class Charts extends Component {
     handleUv = (e) => {
         e.preventDefault();
         this.setState({ property: "raggi ultravioletti" });
-        Axios.get(`http://137.204.107.148:3128/api/history/uv/${this.state.thingId}`).then((res) => {
+        Axios.get(`https://137.204.107.148:3128/api/history/uv/${this.state.thingId}`).then((res) => {
             const data = res.data.uv;
             data.forEach((elem) => elem.date = timestampToDate(+elem.timestamp))
             this.setState({ uvData: data });
